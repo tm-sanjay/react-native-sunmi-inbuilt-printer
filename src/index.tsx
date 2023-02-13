@@ -332,7 +332,7 @@ export class Template1 {
   //calculate subtotal and return it
   _calculateSubtotal() {
     this.subtotal = 0;
-    this.itemdetails.forEach((value, key) => {
+    this.itemdetails.forEach((value) => {
       this.subtotal += value[0] * value[1];
     });
     return this.subtotal;
