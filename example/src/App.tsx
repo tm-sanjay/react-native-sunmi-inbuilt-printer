@@ -1,9 +1,19 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text, TouchableOpacity ,Alert} from 'react-native';
-import InbuiltPrinter, {AlignValue} from 'react-native-sunmi-inbuilt-printer';
+import InbuiltPrinter,  {AlignValue, Template1} from 'react-native-sunmi-inbuilt-printer';
 
 export default function App() {
+
+  const _temp1 = () => {
+    // Template1
+    const template1 = new Template1("My Store", "Store address, no 123", "+1234567890");
+    template1.addItem("Item 1", 1, 10, 0); //name, qty, price, tax
+    template1.addItem("Item 2", 1, 10, 10);
+    template1.addItem("Item 3", 1, 10, 12);
+    template1.printTemplate();
+  }
+
   const _pritnerTest = () => {
     //init printer, def font size 24, def font weight false, def alignment left
     InbuiltPrinter.printerInit();
@@ -30,6 +40,11 @@ export default function App() {
       <TouchableOpacity style={{ ...styles.button, marginTop: 10 }} 
         onPress={_pritnerTest}>
         <Text style={styles.buttonText}>Check printer</Text>
+      </TouchableOpacity>
+      
+      <TouchableOpacity style={{ ...styles.button, marginTop: 10 }} 
+        onPress={_temp1}>
+        <Text style={styles.buttonText}>Template 1</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={{ ...styles.button, marginTop: 10 }} 

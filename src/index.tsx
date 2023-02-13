@@ -297,5 +297,167 @@ type InbuiltPrinterType = {
 
 };
 
+
+export class Template1 {
+  //store name
+  storeName: string;
+  //address
+  address: string;
+  //phone number
+  phoneNumber: string;
+
+  //         item, quantity, price, tax
+  // ex:     banana, 2, 2.00, 0.00
+  //         apple, 1, 1.00, 0.00
+
+  //dictionary for items, quantity, price, tax
+  itemdetails: Map<string, [number, number, number]> = new Map();
+
+  //total, subtotal
+  total: number = 0;
+  subtotal: number = 0;
+
+  //constructor
+  constructor(storeName: string, address: string, phoneNumber: string) {
+    this.storeName = storeName;
+    this.address = address;
+    this.phoneNumber = phoneNumber;
+  }
+
+  //add item to the dictionary
+  addItem(item: string, quantity: number, price: number, tax: number) {
+    this.itemdetails.set(item, [quantity, price, tax]);
+  }
+
+  //calculate subtotal and return it
+  _calculateSubtotal() {
+    this.subtotal = 0;
+    this.itemdetails.forEach((value, key) => {
+      this.subtotal += value[0] * value[1];
+    });
+    return this.subtotal;
+  }
+
+  //calculate total by adding tax and return it
+  _calculateTotal() {
+    this.total = 0;
+    let itemAfterTax = 0;
+    this.itemdetails.forEach((value, key) => {
+      itemAfterTax = value[0] * value[1] + value[0] * value[1] * value[2]/100;
+      this.total += itemAfterTax;
+      //log
+      console.log(
+        "item: " + key + " quantity: " + value[0] + " price: " + value[1] + " tax: " + value[2] + " itemAfterTax: " + itemAfterTax
+      );
+    }
+    );
+    console.log(" total: " + this.total);
+    return this.total;
+  }
+
+
+  //this method for print all template
+  printTemplate() {
+    InbuiltPrinter.printerInit();
+    
+    //Store name
+    InbuiltPrinter.setFontSize(40);
+    InbuiltPrinter.setFontWeight(true);
+    InbuiltPrinter.setAlignment(AlignValue.CENTER);
+    InbuiltPrinter.printerText(this.storeName + "\n");
+    // InbuiltPrinter.lineWrap(1);
+
+    //Store address
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.setAlignment(AlignValue.CENTER);
+    InbuiltPrinter.printerText(this.address + "\n");
+    // InbuiltPrinter.lineWrap(1);
+
+    //Store phone number
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.setAlignment(AlignValue.CENTER);
+    InbuiltPrinter.printerText(this.phoneNumber + "\n");
+    InbuiltPrinter.lineWrap(1);
+
+    //Receipt type
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(true);
+    InbuiltPrinter.setAlignment(AlignValue.LEFT);
+    // InbuiltPrinter.printerText('PRE AUTHORIZED RECEIPT\n');
+    // InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.printerText('Customer copy\n');
+    InbuiltPrinter.lineWrap(1);
+
+    //items column header
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.printColumnsString(
+      ['Description', 'Quantity', `Amount`],
+      [120, 60, 60],
+      [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
+    );
+    InbuiltPrinter.printColumnsString(
+      ['-----------', '--------', `------`],
+      [120, 60, 60],
+      [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
+    );
+
+    //items
+    this.itemdetails.forEach((value, key) => {
+      InbuiltPrinter.printColumnsString(
+        [key, value[0].toString(), value[1].toFixed(2)],
+        [120, 60, 60],
+        [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
+      );
+    }
+    );
+
+    //subtotal and tax
+    InbuiltPrinter.printColumnsString(
+      [' ', ' ', `--------`],
+      [120, 60, 60],
+      [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
+    );
+
+    InbuiltPrinter.printColumnsString(
+      [' ', 'Subtotal', this._calculateSubtotal().toFixed(2)],
+      [120, 60, 60],
+      [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
+    );
+
+    let tax = this._calculateTotal() - this._calculateSubtotal();
+    // tax to tax.toFixed(2);
+    
+    InbuiltPrinter.printColumnsString(
+      [' ', 'Tax', tax.toFixed(2)],
+      [120, 60, 60],
+      [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
+    );
+
+    //total
+    InbuiltPrinter.setFontSize(40);
+    InbuiltPrinter.setFontWeight(true);
+    InbuiltPrinter.printColumnsString(
+      [' ', 'Total', this._calculateTotal().toFixed(2)],
+      [60, 60, 60],
+      [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
+    );
+
+    //(cash)
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.printColumnsString(
+      [' ', 'Cash $', this._calculateTotal().toFixed(2)],
+      [120, 60, 60],
+      [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
+    );
+    InbuiltPrinter.lineWrap(1);
+  }
+
+}
+
+
 export default InbuiltPrinter as InbuiltPrinterType;
 

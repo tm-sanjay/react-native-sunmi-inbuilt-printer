@@ -33,6 +33,15 @@ const _cashDrawerStatus = () => {
   });
 }
 
+//example template of a receipt
+const _temp1 = () => {
+  const template1 = new Template1("My Store", "Store address, no 123", "+1234567890");
+  template1.addItem("Item 1", 1, 10, 0); //name, qty, price, tax
+  template1.addItem("Item 2", 1, 10, 10);
+  template1.addItem("Item 3", 1, 10, 12);
+  template1.printTemplate();
+}
+
 ```
 
 
