@@ -11,16 +11,30 @@ npm install react-native-sunmi-inbuilt-printer
 ## Usage
 
 ```js
-import { multiply } from 'react-native-sunmi-inbuilt-printer';
+import InbuiltPrinter from 'react-native-sunmi-inbuilt-printer';
 
 // ...
 
-const result = await multiply(3, 7);
+const _pritnerTest = () => {
+  //init printer, def font size 24, def font weight false, def alignment left
+  InbuiltPrinter.printerInit();
+  InbuiltPrinter.setFontSize(30);
+  InbuiltPrinter.setFontWeight(true);
+  InbuiltPrinter.printerText('WELCOME TEST\n');
+}
+
+const _cashDrawer = () => {
+  InbuiltPrinter.openDrawer();
+}
+
+const _cashDrawerStatus = () => {
+  InbuiltPrinter.getDrawerStatus().then((r) => {
+    console.log(r) //boolien
+  });
+}
+
 ```
 
-## Contributing
-
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
 
 ## License
 

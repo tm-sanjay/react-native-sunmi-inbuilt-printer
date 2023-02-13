@@ -293,7 +293,7 @@ type InbuiltPrinterType = {
    * Cash drawer status
    * @param promise
    */
-  getDrawerStatus: () => void;
+  getDrawerStatus: () => Promise<Boolean>;
 
 };
 
