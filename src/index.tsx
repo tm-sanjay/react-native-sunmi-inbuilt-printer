@@ -6,6 +6,12 @@ export function multiply(a: number, b: number): Promise<number> {
   return InbuiltPrinter.multiply(a, b);
 }
 
+export function printLine(blod: boolean, size: number): void {
+  InbuiltPrinter.setFontSize(size);
+  InbuiltPrinter.setFontWeight(blod);
+  InbuiltPrinter.printerText('───────────────────────────────────────────────\n');
+}
+
 export enum PrinterStyleKey {
   // text double width
   ENABLE_DOUBLE_WIDTH = 1000,
@@ -449,6 +455,389 @@ export class Template1 {
       [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
     );
     InbuiltPrinter.lineWrap(1);
+  }
+
+}
+
+export class Template2 {
+//store name, address, phone number
+  storeName: string;
+  
+  add1: string = '';
+  add2: string = '';
+  add3: string = '';
+  phoneNumber: string = '';
+
+  gstNumber: string = '';
+
+  invoiceNumber: string = '';
+
+  date: string = '';
+  tokenNumber: string = '';
+  time: string = '';
+  tableNumber: string = '';
+
+  cgstRate: number = 2.5;
+  sgstRate: number = 2.5;
+  serviceChargeRate: number = 5;
+
+  //         item, quantity, rate, disc, value
+  // ex:     banana, 2, 2.00, 0.00, 4.00
+  //         apple, 1, 1.00, 0.00, 1.00
+
+  //dictionary for items, quantity, rate, disc, value
+  itemdetails: Map<string, [number, number, number, number]> = new Map();
+
+  //total, subtotal
+  grandTotal: number = 0;
+  subtotal: number = 0;
+
+
+  constructor(storeName: string) {
+    this.storeName = storeName;
+  }
+
+  //add item to the dictionary
+  addItem(item: string, quantity: number, rate: number, disc: number, tax: number) {
+    this.itemdetails.set(item, [quantity, rate, disc, tax]);
+  }
+
+  //calculate subtotal
+  _calculateSubtotal() {
+    this.subtotal = 0;
+    this.itemdetails.forEach((value) => {
+      let itemSubtotal = value[0] * value[1];
+      this.subtotal += itemSubtotal;
+    });
+    return this.subtotal;
+  }
+
+  //calculate cgst
+  _calculateCGST() {
+    return this._calculateSubtotal() * (this.cgstRate / 100);
+  }
+
+  //calculate sgst
+  _calculateSGST() {
+    return this._calculateSubtotal() * (this.sgstRate / 100);
+  }
+
+  //calculate service charge
+  _calculateServiceCharge() {
+    return this._calculateSubtotal() * (this.serviceChargeRate / 100);
+  }
+
+  //calculate total
+  _calculateTotal() {
+    this.grandTotal = 0;
+    this.grandTotal = this._calculateSubtotal() + this._calculateCGST() + this._calculateSGST() + this._calculateServiceCharge();
+    return this.grandTotal;
+  }
+  
+  printTemplate() {
+    InbuiltPrinter.printerInit();
+    
+    //Store name
+    InbuiltPrinter.setFontSize(32);
+    InbuiltPrinter.setFontWeight(true);
+    InbuiltPrinter.setAlignment(AlignValue.CENTER);
+    InbuiltPrinter.printerText(this.storeName + '\n');
+
+    //Address line 1
+    InbuiltPrinter.setFontSize(32);
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.setAlignment(AlignValue.CENTER);
+    InbuiltPrinter.printerText(this.add1 + '\n');
+    InbuiltPrinter.printerText(this.add2 + '\n');
+    InbuiltPrinter.printerText(this.add3 + '\n');
+    InbuiltPrinter.printerText(this.gstNumber + '\n');
+    InbuiltPrinter.printerText(this.phoneNumber + '\n');
+    InbuiltPrinter.lineWrap(1);
+
+    //Invoice No
+    InbuiltPrinter.setFontSize(32);
+    InbuiltPrinter.setFontWeight(true);
+    InbuiltPrinter.setAlignment(AlignValue.CENTER);
+    InbuiltPrinter.printerText(this.invoiceNumber + '\n');
+
+    //2 column
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.printColumnsString(
+      ['  ' + 'Token No.:' + this.tokenNumber, 'Date: ' +this.date+ '  '],
+      [120, 120],
+      [AlignValue.LEFT, AlignValue.RIGHT],
+    );
+    InbuiltPrinter.printColumnsString(
+      ['  ' + 'Cashier:2022', 'Time:' +this.time+ '  '],
+      [120, 120],
+      [AlignValue.LEFT, AlignValue.RIGHT],
+    );
+    InbuiltPrinter.printColumnsString(
+      ['  ' + 'Table No:' + this.tableNumber, ''],
+      [120, 120],
+      [AlignValue.LEFT, AlignValue.RIGHT],
+    );
+
+    //items header
+    printLine(true, 24);
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(false);
+    //5 column
+    InbuiltPrinter.printColumnsString(
+      ['Item', 'Qty', 'Rate', 'Disc', 'Value'],
+      [48, 20, 20, 20, 20],
+      [AlignValue.CENTER, AlignValue.CENTER, AlignValue.CENTER, AlignValue.CENTER, AlignValue.CENTER],
+    );
+
+
+    //items
+    printLine(true, 24);
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(true);
+    
+    this.itemdetails.forEach((value, key) => {
+      InbuiltPrinter.printColumnsString(
+        ['  ' +key, value[0].toFixed(2), value[1].toFixed(2), value[2].toFixed(2), value[3].toFixed(2)],
+        [48, 20, 20, 20, 20],
+        [AlignValue.CENTER, AlignValue.CENTER, AlignValue.CENTER, AlignValue.CENTER, AlignValue.CENTER],
+      );
+    }
+    );
+
+    //subtotal
+    printLine(true, 24);
+    InbuiltPrinter.setFontSize(22);
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.printColumnsString(
+      ['   ' + 'Subtotal:', this._calculateSubtotal().toFixed(2) + '   '],
+      [120, 120],
+      [AlignValue.LEFT, AlignValue.RIGHT],
+    );
+    printLine(true, 24);
+
+    //tax
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.printColumnsString(
+      ['   ' + 'CGST(2.5%)', this._calculateCGST().toFixed(2)+ '   '],
+      [120, 120],
+      [AlignValue.LEFT, AlignValue.RIGHT],
+    );
+    InbuiltPrinter.printColumnsString(
+      ['   ' + 'SGST(2.5%)', this._calculateSGST().toFixed(2)+ '   '],
+      [120, 120],
+      [AlignValue.LEFT, AlignValue.RIGHT],
+    );
+    InbuiltPrinter.printColumnsString(
+      ['   ' + 'SERVICE CHARGE 5%', this._calculateServiceCharge().toFixed(2)+ '   '],
+      [120, 120],
+      [AlignValue.LEFT, AlignValue.RIGHT],
+    );
+    InbuiltPrinter.printColumnsString(
+      ['   ' + 'Rounded Off(-)', '0.00'+ '   '],
+      [120, 120],
+      [AlignValue.LEFT, AlignValue.RIGHT],
+    );
+    printLine(true, 24);
+
+    //total
+    InbuiltPrinter.setFontSize(26);
+    InbuiltPrinter.setFontWeight(true);
+    InbuiltPrinter.printColumnsString(
+      ['   ' + 'Grand Total:', this._calculateTotal().toFixed(2)+ '   '],
+      [120, 120],
+      [AlignValue.LEFT, AlignValue.CENTER],
+    );
+    //cash tendered
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.printColumnsString(
+      ['   ' + 'Cash Tendered:', '0.00'+ '   '],
+      [120, 120],
+      [AlignValue.LEFT, AlignValue.RIGHT],
+    );
+    //change
+    InbuiltPrinter.printColumnsString(
+      ['   ' + 'Change:', '0.00'+ '   '],
+      [120, 120],
+      [AlignValue.LEFT, AlignValue.RIGHT],
+    );
+    InbuiltPrinter.setFontSize(22);
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.setAlignment(AlignValue.RIGHT);
+    InbuiltPrinter.printerText('**Reference Bill-Payment Awaited**    \n');
+
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.setAlignment(AlignValue.CENTER);
+    printLine(true, 24);
+    InbuiltPrinter.printerText(' \n');
+    printLine(true, 24);
+    
+    InbuiltPrinter.setFontSize(22);
+    InbuiltPrinter.setFontWeight(true);
+    InbuiltPrinter.setAlignment(AlignValue.CENTER);
+    InbuiltPrinter.printerText('**** Thank You - Visit Again ****\n');
+
+    printLine(true, 24);
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(true);
+    InbuiltPrinter.setAlignment(AlignValue.LEFT);
+    InbuiltPrinter.printerText('   Printed On: ' + this.date + ' ' + this.time + '\n');
+  }
+} 
+
+export class Template3 {
+  //store name
+  storeName: string;
+  //address
+  add1: string = '';
+  add2: string = '';
+  add3: string = '';
+  //         item, quantity, price, amount
+  // ex:     banana, 2, 2.00, 4.00
+  //         apple, 1, 1.00, 1.00
+
+  //dictionary for items, quantity, price, amount
+  itemdetails: Map<string, [number, number, number]> = new Map();
+
+  //total, subtotal
+  total: number = 0;
+  subtotal: number = 0;
+
+  //date and time
+  date: string = '';
+  time: string = '';
+  tokenNumber: string = '';
+  billNumber: string = '';
+  
+  //constructor
+  constructor(storeName: string) {
+    this.storeName = storeName;
+  }
+
+  //add item to the dictionary
+  addItem(item: string, quantity: number, price: number, tax: number) {
+    this.itemdetails.set(item, [quantity, price, tax]);
+  }
+
+  //calculate subtotal add all 'amount'
+  _calculateSubtotal() {
+    this.subtotal = 0;
+    this.itemdetails.forEach((value) => {
+      this.subtotal += value[0] * value[1];
+    }
+    );
+    return this.subtotal;
+  }
+
+  _totalQnt() {
+    let totalQnt = 0;
+    this.itemdetails.forEach((value) => {
+      totalQnt += value[0];
+    }
+    );
+    return totalQnt;
+  };
+
+  //this method for print all template
+  printTemplate() {
+    InbuiltPrinter.printerInit();
+    
+    //Store name
+    InbuiltPrinter.setFontSize(32);
+    InbuiltPrinter.setFontWeight(true);
+    InbuiltPrinter.setAlignment(AlignValue.CENTER);
+    InbuiltPrinter.printerText(this.storeName + "\n");
+    // InbuiltPrinter.lineWrap(1);
+
+    //Store address
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.setAlignment(AlignValue.CENTER);
+    InbuiltPrinter.printerText(this.add1 + "\n");
+    InbuiltPrinter.printerText(this.add2 + "\n");
+    // InbuiltPrinter.printerText(this.add3 + "\n");
+    // InbuiltPrinter.lineWrap(1);
+
+    //line
+    printLine(false, 24);
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.setAlignment(AlignValue.LEFT);
+    InbuiltPrinter.printerText('  '+'Name:\n');
+    printLine(false, 24);
+
+    //2column
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.setAlignment(AlignValue.LEFT);
+    InbuiltPrinter.printColumnsString(
+      ['  '+'Date:'+this.date+' '+this.time, 'SELF SERVICE: A4'+ '  '],
+      [120, 120],
+      [AlignValue.LEFT, AlignValue.LEFT],
+    );
+    InbuiltPrinter.printColumnsString(
+      ['  '+'Cashier: biller', 'Bill No:'+this.billNumber +'  '],
+      [120, 120],
+      [AlignValue.LEFT, AlignValue.LEFT],
+    );
+    
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(true);
+    InbuiltPrinter.setAlignment(AlignValue.LEFT);
+    InbuiltPrinter.printerText('  '+'Token No.:'+this.tokenNumber+'\n');
+
+    //items column header
+    printLine(false, 24);
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.printColumnsString(
+      ['  '+'No.Items', 'Qty', 'Price', 'Amount'+ '  '],
+      [80, 40, 40, 40],
+      [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT, AlignValue.RIGHT],
+    );
+    printLine(false, 24);
+
+    //items
+    this.itemdetails.forEach((value, key) => {
+      InbuiltPrinter.setFontSize(24);
+      InbuiltPrinter.setFontWeight(false);
+      InbuiltPrinter.printColumnsString(
+        ['  '+key, value[0].toString(), value[1].toFixed(2), (value[0] * value[1]).toFixed(2)+ '  '],
+        [80, 40, 40, 40],
+        [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT, AlignValue.RIGHT],
+      );
+    }
+    );
+
+    
+
+    //line
+    printLine(false, 24);
+    //subtotal
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.printColumnsString(
+      ['  '+'Total Qty:'+this._totalQnt().toString(), 'Sub Total', this._calculateSubtotal().toFixed(2)+'  '],
+      [80, 80, 40],
+      [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
+    );
+    printLine(false, 24);
+
+    //total 
+    InbuiltPrinter.setFontSize(30);
+    InbuiltPrinter.setFontWeight(true);
+    InbuiltPrinter.setAlignment(AlignValue.RIGHT);
+    InbuiltPrinter.printerText('Grand Total  ₹' + this._calculateSubtotal().toFixed(2) + '   \n');
+    printLine(false, 24);
+
+    //thanks
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(true);
+    InbuiltPrinter.setAlignment(AlignValue.CENTER);
+    InbuiltPrinter.printerText('Thank You | Please Order Us Again..!!\n');
   }
 
 }
