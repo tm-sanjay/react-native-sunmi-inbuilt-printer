@@ -842,6 +842,108 @@ export class Template3 {
 
 }
 
+export class CardTemplate1 {
+  // "data": {
+  //   "amount": 108.0,
+  //   "txnId": "17969",
+  //   "cardNumber": "************0119",
+  //   "cardName": "Test User",
+  //   "cardBrand": "MASTERCARD",
+  //   "paymentType": "CREDIT",
+  //   "cardEntryMode": "CHIP_ENTRY"
+  // }
 
+  //amount
+  amount: string;
+  //transaction id
+  txnId: string;
+  //card number
+  cardNumber: string;
+  //card holder name
+  cardHolderName: string;
+  //card brand
+  cardBrand: string;
+  //payment type
+  paymentType: string;
+  //card entry mode
+  cardEntryMode: string;
+
+
+  //constructor
+  constructor(amount: string, txnId: string, cardNumber: string, cardHolderName: string, cardBrand: string, paymentType: string, cardEntryMode: string) {
+    this.amount = amount;
+    this.txnId = txnId;
+    this.cardNumber = cardNumber;
+    this.cardHolderName = cardHolderName;
+    this.cardBrand = cardBrand;
+    this.paymentType = paymentType;
+    this.cardEntryMode = cardEntryMode;
+  }
+
+  //this method for print all template
+  printTemplate() {
+    //Receipt type
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(true);
+    InbuiltPrinter.setAlignment(AlignValue.LEFT);
+    InbuiltPrinter.printerText('CARD RECEIPT\n');
+    InbuiltPrinter.printerText('--------------\n');
+
+    //------------------------------------------
+    //card type and number
+    //price and masked card number
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(true);
+    InbuiltPrinter.printColumnsString(
+      ['USD $' + this.amount, this.cardNumber],
+      [60, 80],
+      [AlignValue.LEFT, AlignValue.LEFT],
+    );
+
+    //Footer (card type/name )
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.printColumnsString(
+      [this.cardBrand, 'Acct/Card'],
+      [60, 80],
+      [AlignValue.LEFT, AlignValue.LEFT],
+    );
+
+    // ------------------------------------------
+
+    //Entry method, auth code, response code
+    InbuiltPrinter.setFontWeight(true);
+    InbuiltPrinter.printColumnsString(
+      [this.cardEntryMode, this.txnId],
+      [60, 80],
+      [AlignValue.LEFT, AlignValue.LEFT],
+    );
+    
+    //footer
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.printColumnsString(
+      ['Entry Method', 'Txn ID'],
+      [60, 80],
+      [AlignValue.LEFT, AlignValue.LEFT],
+    );
+    
+    // ------------------------------------------
+    
+    //card holder name, card type
+    InbuiltPrinter.setFontWeight(true);
+    InbuiltPrinter.printColumnsString(
+      [this.cardHolderName, this.paymentType],
+      [60, 80],
+      [AlignValue.LEFT, AlignValue.LEFT],
+    );
+
+    //footer
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.printColumnsString(
+      ['Card Holder Name', 'Card Type'],
+      [60, 80],
+      [AlignValue.LEFT, AlignValue.LEFT],
+    );
+    }
+}
 export default InbuiltPrinter as InbuiltPrinterType;
 

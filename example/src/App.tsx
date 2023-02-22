@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text, TouchableOpacity ,Alert} from 'react-native';
-import InbuiltPrinter,  {AlignValue, Template1} from 'react-native-sunmi-inbuilt-printer';
+import InbuiltPrinter,  {AlignValue, Template1, CardTemplate1} from 'react-native-sunmi-inbuilt-printer';
 
 export default function App() {
 
@@ -12,6 +12,16 @@ export default function App() {
     template1.addItem("Item 2", 1, 10, 10);
     template1.addItem("Item 3", 1, 10, 12);
     template1.printTemplate();
+
+    //card payment template1
+    const cardTemplate = new CardTemplate1("108.0", "17969", "************0119", "Test User", "MASTERCARD", "CREDIT", "CHIP_ENTRY");
+    cardTemplate.printTemplate();
+
+    //thank you message
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.printerText('Thank you for shopping with us\n');
+    InbuiltPrinter.printerText('------------------------------\n');
+    InbuiltPrinter.cutPaper();
   }
 
   const _pritnerTest = () => {
@@ -41,7 +51,7 @@ export default function App() {
         onPress={_pritnerTest}>
         <Text style={styles.buttonText}>Check printer</Text>
       </TouchableOpacity>
-      
+
       <TouchableOpacity style={{ ...styles.button, marginTop: 10 }} 
         onPress={_temp1}>
         <Text style={styles.buttonText}>Template 1</Text>

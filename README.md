@@ -40,6 +40,16 @@ const _temp1 = () => {
   template1.addItem("Item 2", 1, 10, 10);
   template1.addItem("Item 3", 1, 10, 12);
   template1.printTemplate();
+
+  //card payment template1
+  const cardTemplate = new CardTemplate1("108.0", "17969", "************0119", "Test User", "MASTERCARD", "CREDIT", "CHIP_ENTRY");
+  cardTemplate.printTemplate();
+
+  //thank you message
+  InbuiltPrinter.setFontSize(24);
+  InbuiltPrinter.printerText('Thank you for shopping with us\n');
+  InbuiltPrinter.printerText('------------------------------\n');
+  InbuiltPrinter.cutPaper();
 }
 
 ```
