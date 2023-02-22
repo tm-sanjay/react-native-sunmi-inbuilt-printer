@@ -348,7 +348,7 @@ export class Template1 {
   _calculateTotal() {
     this.total = 0;
     let itemAfterTax = 0;
-    this.itemdetails.forEach((value, key) => {
+    this.itemdetails.forEach((value) => {
       itemAfterTax = value[0] * value[1] + value[0] * value[1] * value[2]/100;
       this.total += itemAfterTax;
     }
