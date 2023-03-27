@@ -408,7 +408,7 @@ export class Template1 {
     //items
     this.itemdetails.forEach((value, key) => {
       InbuiltPrinter.printColumnsString(
-        [key, value[0].toString(), value[1].toFixed(2)],
+        [key, value[0].toString(), (value[0] * value[1]).toFixed(2)],
         [120, 60, 60],
         [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
       );
