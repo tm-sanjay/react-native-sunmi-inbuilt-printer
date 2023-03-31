@@ -318,7 +318,9 @@ export class Template1 {
   time: string = "";
   //transaction number
   transactionId: string = "";
-  //change
+  //cash collected
+  cash: number = 0;
+  //change given
   change: number = 0;
 
   //         item, quantity, price, tax
@@ -475,25 +477,28 @@ export class Template1 {
       [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
     );
 
-    //(cash)
-    InbuiltPrinter.setFontSize(24);
-    InbuiltPrinter.setFontWeight(false);
-    InbuiltPrinter.printColumnsString(
-      [' ', 'Cash $', this._calculateTotal().toFixed(2)],
-      [120, 60, 60],
-      [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
-    );
+    //cash
+    if(this.cash != 0) {
+      InbuiltPrinter.setFontSize(24);
+      InbuiltPrinter.setFontWeight(false);
+      InbuiltPrinter.printColumnsString(
+        [' ', 'Cash $', this.cash.toFixed(2)],
+        [120, 60, 60],
+        [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
+      );
+    }
     //change
-    InbuiltPrinter.setFontSize(24);
-    InbuiltPrinter.setFontWeight(false);
-    InbuiltPrinter.printColumnsString(
-      [' ', 'Change $', this.change.toFixed(2)],
-      [120, 60, 60],
-      [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
-    );
-    InbuiltPrinter.lineWrap(1);
+    if(this.change != 0) {
+      InbuiltPrinter.setFontSize(24);
+      InbuiltPrinter.setFontWeight(false);
+      InbuiltPrinter.printColumnsString(
+        [' ', 'Change $', this.change.toFixed(2)],
+        [120, 60, 60],
+        [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
+      );
+      InbuiltPrinter.lineWrap(1);
+    }
   }
-
 }
 
 export class Template2 {

@@ -11,6 +11,7 @@ export default function App() {
     template1.data = "31/03/2023";
     template1.time = "12:00:00";
     template1.transactionId = "123456";
+    template1.cash = 5.0;
     template1.change = 0.5;
 
     template1.addItem("Item 1", 1, 10, 0); //name, qty, price, tax
