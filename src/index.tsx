@@ -312,6 +312,13 @@ export class Template1 {
   //phone number
   phoneNumber: string;
 
+  //data
+  data: string = "";
+  //time
+  time: string = "";
+  //transaction number
+  transactionId: string = "";
+
   //         item, quantity, price, tax
   // ex:     banana, 2, 2.00, 0.00
   //         apple, 1, 1.00, 0.00
@@ -381,6 +388,26 @@ export class Template1 {
     InbuiltPrinter.setAlignment(AlignValue.CENTER);
     InbuiltPrinter.printerText(this.phoneNumber + "\n");
     InbuiltPrinter.lineWrap(1);
+
+    //date and time
+    // if date and time is set then print it
+    if (this.data != "" && this.time != "") {
+      InbuiltPrinter.setFontSize(24);
+      InbuiltPrinter.setFontWeight(false);
+      InbuiltPrinter.setAlignment(AlignValue.LEFT);
+      InbuiltPrinter.printerText("Date/Time: " + this.data + "  " + this.time + "\n");
+      InbuiltPrinter.lineWrap(1);
+    }
+
+    //transaction number
+    // if transaction number is set then print it
+    if (this.transactionId != "") {
+      InbuiltPrinter.setFontSize(24);
+      InbuiltPrinter.setFontWeight(false);
+      InbuiltPrinter.setAlignment(AlignValue.LEFT);
+      InbuiltPrinter.printerText("Transaction Id: " + this.transactionId + "\n");
+      InbuiltPrinter.lineWrap(1);
+    }
 
     //Receipt type
     InbuiltPrinter.setFontSize(24);
