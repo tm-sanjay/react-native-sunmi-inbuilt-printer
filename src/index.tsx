@@ -318,6 +318,8 @@ export class Template1 {
   time: string = "";
   //transaction number
   transactionId: string = "";
+  //change
+  change: number = 0;
 
   //         item, quantity, price, tax
   // ex:     banana, 2, 2.00, 0.00
@@ -478,6 +480,14 @@ export class Template1 {
     InbuiltPrinter.setFontWeight(false);
     InbuiltPrinter.printColumnsString(
       [' ', 'Cash $', this._calculateTotal().toFixed(2)],
+      [120, 60, 60],
+      [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
+    );
+    //change
+    InbuiltPrinter.setFontSize(24);
+    InbuiltPrinter.setFontWeight(false);
+    InbuiltPrinter.printColumnsString(
+      [' ', 'Change $', this.change.toFixed(2)],
       [120, 60, 60],
       [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
     );
