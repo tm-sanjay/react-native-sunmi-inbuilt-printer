@@ -328,8 +328,8 @@ export class Template1 {
   //         apple, 1, 1.00, 0.00
 
   //dictionary for items, quantity, price, tax
-  itemdetails: Map<string, [number, number, number]> = new Map();
-
+  // itemdetails: Map<string, [number, number, number]> = new Map();
+  itemdetails: [string, number, number, number][] = [];
   //total, subtotal
   total: number = 0;
   subtotal: number = 0;
@@ -343,14 +343,14 @@ export class Template1 {
 
   //add item to the dictionary
   addItem(item: string, quantity: number, price: number, tax: number) {
-    this.itemdetails.set(item, [quantity, price, tax]);
+    this.itemdetails.push([item, quantity, price, tax]);
   }
 
   //calculate subtotal and return it
   _calculateSubtotal() {
     this.subtotal = 0;
     this.itemdetails.forEach((value) => {
-      this.subtotal += value[0] * value[1];
+      this.subtotal += value[1] * value[2];
     });
     return this.subtotal;
   }
@@ -360,7 +360,7 @@ export class Template1 {
     this.total = 0;
     let itemAfterTax = 0;
     this.itemdetails.forEach((value) => {
-      itemAfterTax = value[0] * value[1] + value[0] * value[1] * value[2]/100;
+      itemAfterTax = value[1] * value[2] + value[1] * value[2] * value[3]/100;
       this.total += itemAfterTax;
     }
     );
@@ -437,13 +437,13 @@ export class Template1 {
     );
 
     //items
-    this.itemdetails.forEach((value, key) => {
-      InbuiltPrinter.printColumnsString(
-        [key, value[0].toString(), (value[0] * value[1]).toFixed(2)],
-        [120, 60, 60],
-        [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
-      );
-    }
+    this.itemdetails.forEach((value) => {
+        InbuiltPrinter.printColumnsString(
+          [value[0].toString(), value[1], (value[1] * value[2]).toFixed(2)],
+          [120, 60, 60],
+          [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
+        );
+      }
     );
 
     //subtotal and tax
