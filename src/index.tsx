@@ -439,7 +439,7 @@ export class Template1 {
     //items
     this.itemdetails.forEach((value) => {
         InbuiltPrinter.printColumnsString(
-          [value[0].toString(), value[1], (value[1] * value[2]).toFixed(2)],
+          [value[0].toString(), value[1].toString(), (value[1] * value[2]).toFixed(2)],
           [120, 60, 60],
           [AlignValue.LEFT, AlignValue.RIGHT, AlignValue.RIGHT],
         );
