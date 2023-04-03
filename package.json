@@ -1,6 +1,6 @@
 {
   "name": "react-native-sunmi-inbuilt-printer",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Senmi Inbuilt Printer for React Native with example templates",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
